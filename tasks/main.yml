@@ -12,52 +12,30 @@
 - set_fact: grafana_release='grafana={{grafana_version}}'
 
 - name: grafana-install | Install Grafana Release
-  apt: name="{{grafana_release}}"
+  yum: name="{{grafana_release}}"
   when: grafana_version != "latest"
   notify:
     - grafana restart
 
 - name: grafana-install | Install Grafana Latest
-  apt: name="grafana"
+  yum: name="grafana"
   when: grafana_version == "latest"
   notify:
   - grafana restart
 
-  - name: grafana-install | Add centos repository
-    copy:
-      src=grafana.repo
-      dest=/etc/yum.repos.d/grafana.repo
-      owner=root
-      group=root
-      mode=0644
+- name: grafana-configure | Setup grafana
+  template: src=grafana.ini.j2 dest=/etc/grafana/grafana.ini
+  notify: grafana restart
 
-  - set_fact: grafana_release='grafana={{grafana_version}}'
+- name: grafana-configure | Ensure that Grafana-Server is started
+  service: name=grafana-server state=started enabled=yes
 
-  - name: grafana-install | Install Grafana Release
-    apt: name="{{grafana_release}}"
-    when: grafana_version != "latest"
-    notify:
-      - grafana restart
+- name: grafana-configure | Install plugins
+  command: "grafana-cli plugins install {{item}}"
+  with_items: "{{grafana_plugins_install}}"
+  notify: grafana restart
 
-  - name: grafana-install | Install Grafana Latest
-    apt: name="grafana"
-    when: grafana_version == "latest"
-    notify:
-    - grafana restart
-
-  - name: grafana-configure | Setup grafana
-    template: src=grafana.ini.j2 dest=/etc/grafana/grafana.ini
-    notify: grafana restart
-
-  - name: grafana-configure | Ensure that Grafana-Server is started
-    service: name=grafana-server state=started enabled=yes
-
-  - name: grafana-configure | Install plugins
-    command: "grafana-cli plugins install {{item}}"
-    with_items: "{{grafana_plugins_install}}"
-    notify: grafana restart
-
-  - name: grafana-configure | Compile Nginx configuration
-    template: src=nginx.conf.j2 dest={{nginx_dir|default('/etc/nginx')}}/sites-enabled/grafana.conf
-    when: grafana_nginx
-    notify:  nginx reload
+- name: grafana-configure | Compile Nginx configuration
+  template: src=nginx.conf.j2 dest={{nginx_dir|default('/etc/nginx')}}/sites-enabled/grafana.conf
+  when: grafana_nginx
+  notify:  nginx reload
