@@ -2,6 +2,7 @@ galaxy_info:
   author: Eduardo Rozario
   description: Installs and setup Grafana metrics dashboard
   company: Rivendel Tecnologia
+  min_ansible_version: 1.9
   license: MIT
   platforms:
   - name: EL
