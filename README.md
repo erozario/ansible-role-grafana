@@ -9,7 +9,7 @@ Installation
 
 erozario.grafana is an Ansible role distributed globally using Ansible Galaxy. In order to install erozario/grafana role you can use the following command.
 
-$ ansible-galaxy install erozario.grafana
+    $ ansible-galaxy install erozario.grafana
 
 Role Variables
 --------------
@@ -163,7 +163,7 @@ Role Variables
 Dependencies
 ------------
 
-geerlingguy.nginx
+    $ ansible-galaxy install geerlingguy.nginx
 
 Example Playbook
 ----------------
