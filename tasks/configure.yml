@@ -1,0 +1,18 @@
+---
+
+- name: grafana-configure | Setup grafana
+  template: src=grafana.ini.j2 dest=/etc/grafana/grafana.ini
+  notify: grafana restart
+
+- name: grafana-configure | Ensure that Grafana-Server is started
+  service: name=grafana-server state=started enabled=yes
+
+- name: grafana-configure | Install plugins
+  command: "grafana-cli plugins install {{item}}"
+  with_items: "{{grafana_plugins_install}}"
+  notify: grafana restart
+
+- name: grafana-configure | Compile Nginx configuration
+  template: src=nginx.conf.j2 dest={{nginx_dir|default('/etc/nginx')}}/sites-enabled/grafana.conf
+  when: grafana_nginx
+  notify:  nginx reload
