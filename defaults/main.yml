@@ -31,6 +31,7 @@ grafana_host: 127.0.0.1:3306
 grafana_name: grafana
 grafana_user: root
 grafana_password:
+grafana_ssl_mode: disable 
 grafana_path: grafana.db
 
 # Session
