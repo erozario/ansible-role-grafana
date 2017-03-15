@@ -1,7 +1,12 @@
 ---
 
 - name: grafana-install | Add centos repository
-  template: src=grafana.repo.j2 dest=/etc/yum.repos.d/grafana.repo
+  copy:
+    src=grafana.repo.j2
+    dest=/etc/yum.repos.d/grafana.repo
+    owner=root
+    group=root
+    mode=0644
 
 - set_fact: grafana_release='grafana={{grafana_version}}'
 
