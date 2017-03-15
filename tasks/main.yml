@@ -35,9 +35,6 @@
   with_items: "{{grafana_plugins_install}}"
   notify: grafana restart
 
-- name: grafana-configure | Create target directory Nginx
-  file: path=/etc/nginx/sites-enabled/grafana.conf state=directory mode=0755
-
 - name: grafana-configure | Compile Nginx configuration
-  template: src=nginx.conf.j2 dest={{nginx_dir|default('/etc/nginx')}}/sites-enabled/grafana.conf
+  template: src=nginx.conf.j2 dest={{nginx_dir|default('/etc/nginx')}}/conf.d/grafana.conf
   notify:  nginx reload
