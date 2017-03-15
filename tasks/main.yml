@@ -1,5 +1,47 @@
 ---
 
-- include: grafana.yml
-  when: grafana_enabled
-  tags: [grafana]
+- name: grafana-install | Add centos repository
+  copy:
+    src=grafana.repo
+    dest=/etc/yum.repos.d/grafana.repo
+    owner=root
+    group=root
+    mode=0644
+
+- set_fact: grafana_release='grafana={{grafana_version}}'
+
+- name: grafana-install | Install Grafana Release
+  apt: name="{{grafana_release}}"
+  when: grafana_version != "latest"
+  notify:
+    - grafana restart
+
+- name: grafana-install | Install Grafana Latest
+  apt: name="grafana"
+  when: grafana_version == "latest"
+  notify:
+  - grafana restart
+
+  ---
+
+  - name: grafana-install | Add centos repository
+    copy:
+      src=grafana.repo
+      dest=/etc/yum.repos.d/grafana.repo
+      owner=root
+      group=root
+      mode=0644
+
+  - set_fact: grafana_release='grafana={{grafana_version}}'
+
+  - name: grafana-install | Install Grafana Release
+    apt: name="{{grafana_release}}"
+    when: grafana_version != "latest"
+    notify:
+      - grafana restart
+
+  - name: grafana-install | Install Grafana Latest
+    apt: name="grafana"
+    when: grafana_version == "latest"
+    notify:
+    - grafana restart
