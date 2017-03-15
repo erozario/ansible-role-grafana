@@ -22,8 +22,6 @@
   notify:
   - grafana restart
 
-  ---
-
   - name: grafana-install | Add centos repository
     copy:
       src=grafana.repo
