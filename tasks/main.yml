@@ -36,5 +36,10 @@
   notify: grafana restart
 
 - name: grafana-configure | Compile Nginx configuration
-  template: src=nginx.conf.j2 dest={{nginx_dir|default('/etc/nginx')}}/sites-enabled/grafana.conf
+  template:
+    src=nginx.conf.j2
+    dest={{nginx_dir|default('/etc/nginx')}}/sites-enabled/grafana.conf
+    owner=root
+    group=root
+    mode=0644
   notify:  nginx reload
