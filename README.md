@@ -171,7 +171,7 @@ Example Playbook
     - hosts: all
       become: yes
       roles:
-        - erozario.ansible-role-grafana
+        - erozario.grafana
         - geerlingguy.nginx
       vars:
         grafana_admin_user: admin
