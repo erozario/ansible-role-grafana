@@ -7,7 +7,7 @@ Installs and setup Grafana metrics dashboard and Nginx proxy_pass
 Installation
 ------------
 
-erozario.ansible-role-grafana is an Ansible role distributed globally using Ansible Galaxy. In order to install erozario.ansible-role-grafana role you can use the following command.
+erozario.grafana is an Ansible role distributed globally using Ansible Galaxy. In order to install erozario.grafana role you can use the following command.
 
     $ ansible-galaxy install erozario.grafana
 
@@ -170,7 +170,7 @@ Example Playbook
 
     - hosts: all
       become: yes
-       roles:
+      roles:
         - erozario.ansible-role-grafana
         - geerlingguy.nginx
       vars:
