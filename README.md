@@ -159,12 +159,6 @@ Role Variables
       grafana_nginx_ssl_redirect: "{{grafana_nginx_ssl}}"
       grafana_nginx_port: 80
 
-
-Dependencies
-------------
-
-    $ ansible-galaxy install geerlingguy.nginx
-
 Example Playbook
 ----------------
 
@@ -172,7 +166,6 @@ Example Playbook
       become: yes
       roles:
         - erozario.grafana
-        - geerlingguy.nginx
       vars:
         grafana_admin_user: admin
         grafana_admin_password: grafana

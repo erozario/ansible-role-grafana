@@ -5,10 +5,11 @@ galaxy_info:
   min_ansible_version: 1.9
   license: MIT
   platforms:
+  - name: Amazon
   - name: EL
     versions:
     - 7
   categories:
   - system
   - monitoring
-dependencies: [geerlingguy.nginx]
+dependencies: []

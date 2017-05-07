@@ -1,0 +1,58 @@
+---
+# Tasks specific for Centos7 systems
+
+- name: "CentOS | Install packages"
+  package: name={{ item }} state=present
+  with_items:
+   - libsemanage-python
+   - libselinux-python
+  when: ansible_distribution == "CentOS"
+
+- name: "CentOS/Amazon | Enable nginx repo"
+  template:
+    src: nginx.repo.j2
+    dest: /etc/yum.repos.d/nginx.repo
+    owner: root
+    group: root
+    mode: 0644
+
+- name: "CentOS/Amazon | Ensure nginx is installed"
+  yum:
+    name: "nginx"
+    state: installed
+
+- name: "CentOS/Amazon | Add grafana repository"
+  copy:
+    src=grafana.repo
+    dest=/etc/yum.repos.d/grafana.repo
+    owner=root
+    group=root
+    mode=0644
+  become: true
+
+- set_fact: grafana_release='grafana={{grafana_version}}'
+
+- name: "CentOS/Amazon | Install Grafana {{grafana_version}}"
+  yum: name="{{grafana_release}}"
+  when: grafana_version != "latest"
+  notify:
+    - grafana restart
+
+- name: "CentOS/Amazon | Install Grafana Latest"
+  yum: name="grafana"
+  when: grafana_version == "latest"
+  notify:
+  - grafana restart
+
+- name: "CentOS/Amazon | Compile Nginx configuration"
+  template: src=nginx.conf.j2 dest={{nginx_dir|default('/etc/nginx')}}/conf.d/default.conf
+  notify:  nginx reload
+
+- name: "Amazon | Compile nginx.conf"
+  template: src=amz.conf.j2 dest=/etc/nginx/nginx.conf
+  notify:  nginx reload
+  when: ansible_distribution == "Amazon"
+
+- name: "CentOS | Configure SELinux to allow httpd "
+  seboolean: name=httpd_can_network_connect state=yes persistent=yes
+  when: ansible_distribution == "CentOS"
